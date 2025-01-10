@@ -1,0 +1,46 @@
+.oj-logo-icon {
+  height: 24px;
+  width: 24px;
+}
+
+.text-color {
+  color: rgb(96, 78, 194) !important;
+  font-weight: bold;
+}
+
+.text-color:hover,
+.text-color:active {
+  color: rgb(96, 78, 194) !important;
+}
+
+.signup-button {
+  background-color:rgb(96, 78, 194);
+  border-color: rgb(96, 78, 194);
+}
+
+.signup-button:hover {
+  background-color: rgb(96, 78, 194) !important;
+  border-color: rgb(96, 78, 194) !important;
+  opacity: 0.8;
+}
+
+.signup-button:active,
+.login-button:active {
+  background-color: rgb(96, 78, 194) !important;
+  border-color: rgb(96, 78, 194) !important;
+  opacity: 0.5;
+}
+
+.login-button {
+  color: rgb(96, 78, 194);
+  border-color: rgb(96, 78, 194);
+}
+
+.login-button:hover {
+  background-color: rgb(96, 78, 194) !important;
+  border-color: rgb(96, 78, 194) !important;
+}
+
+a {
+  text-decoration: none;
+}
