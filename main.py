@@ -13,6 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Load .env file
 load_dotenv()
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] == os.getenv("FLASK_KEY")
 Bootstrap5(app)
@@ -26,6 +27,36 @@ gravatar = Gravatar(app,
                     force_lower=False,
                     use_ssl=False,
                     base_url=None)
+
+
+# This creates a Base that inherits from the Declarative Base
+# Create an ORM to define the table for the database
+class Base(DeclarativeBase):
+    pass
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLITE_DB_URI")
+db = SQLAlchemy(model_class=Base)
+db.init_app(app)
+
+
+# CONFIGURE TABLES FOR THE DATABASE
+class Tasks(db.Model):
+    __tablename__ = "user_tasks"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(1000), nullable=False)
+
+
+class User(db.Model):
+    __tablename__ = "user_data"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    email: Mapped[str] = mapped_column(String(150), nullable=False)
+    password: Mapped[str] = mapped_column(String(150), nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route('/')
