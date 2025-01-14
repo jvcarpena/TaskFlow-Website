@@ -92,9 +92,17 @@ def register():
     if form.validate_on_submit():
         # Get the name, email, and password from the form.
         # Strengthen the password using generate password hash.
+        # Get the user using the email input
         name = form.name.data
         email = form.email.data
         plain_password = form.password.data
+        user = db.session.execute(db.select(User).where(User.email == email)).scalar()
+
+        if user:
+            flash("You've already registered with that email, login instead!")
+            return redirect(url_for("login"))
+
+        # else
         strong_password = generate_password_hash(password=plain_password,
                                                  method='pbkdf2:sha256',
                                                  salt_length=8)
@@ -114,9 +122,26 @@ def register():
     return render_template("register.html", form=form)
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template("login.html")
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        # print(email)
+
+        # Get the user using the email.
+        user = db.session.execute(db.select(User).where(User.email == email)).scalar()
+
+        if not user:  # Check if the user exist.
+            flash("That email does not exist.")
+            return redirect(url_for("login"))
+        if not check_password_hash(pwhash=user.password, password=password):  # Check if the password is correct.
+            flash("Incorrect password!")
+            return redirect(url_for("login"))
+
+        return render_template("to-do-list.html")
+    return render_template("login.html", form=form)
 
 
 if __name__ == "__main__":

@@ -27,6 +27,16 @@
 
                       <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
+                      <!-- FLASH MESSAGES FOR INCORRECT INPUT! -->
+                      {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                          <ul class=flash>
+                          {% for message in messages %}
+                            <p style="color: red;">{{ message }}</p>
+                          {% endfor %}
+                          </ul>
+                        {% endif %}
+                      {% endwith %}
                       <div class="form-outline mb-4">
                         {{ render_field(form.name, class="form-control form-control-lg") }}
                       </div>
