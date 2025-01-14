@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import RegisterForm, LoginForm
+from forms import RegisterForm, LoginForm, TaskForm
 from flask_wtf.csrf import CSRFProtect
 
 # Load .env file
@@ -30,16 +30,29 @@ gravatar = Gravatar(app,
                     use_ssl=False,
                     base_url=None)
 
+
+# Custom decorator to protect the dashboard route.
+def authenticated_user_only(function):
+    @wraps(function)
+    def decorated_function(*args, **kwargs):
+        # print(current_user.is_authenticated)
+        if not current_user.is_authenticated:
+            return abort(403)
+
+        return function(*args, **kwargs)
+    return decorated_function
+
+
 # Configure the flask_login using the LoginManager Class
 # and it needs secret key to be set
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-#
-#
-# # Create a user_loader callback. This callback will reload the user object from the database.
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return db.session.get(User, user_id)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+# Create a user_loader callback. This callback will reload the user object from the database.
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, user_id)
 
 
 # This creates a Base that inherits from the Declarative Base
@@ -66,7 +79,7 @@ class Tasks(db.Model):
     task_author = relationship("User", back_populates="tasks")
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = "user_data"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -98,7 +111,7 @@ def register():
         plain_password = form.password.data
         user = db.session.execute(db.select(User).where(User.email == email)).scalar()
 
-        if user:
+        if user:  # Check if the user email already exist in the database.
             flash("You've already registered with that email, login instead!")
             return redirect(url_for("login"))
 
@@ -116,10 +129,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # login_user(new_user)
-        return render_template("to-do-list.html")
+        login_user(new_user)
+        return redirect(url_for("get_all_tasks"))
 
-    return render_template("register.html", form=form)
+    return render_template("register.html", form=form, current_user=current_user)
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -140,8 +153,33 @@ def login():
             flash("Incorrect password!")
             return redirect(url_for("login"))
 
-        return render_template("to-do-list.html")
-    return render_template("login.html", form=form)
+        login_user(user)
+        return redirect(url_for("get_all_tasks"))
+    return render_template("login.html", form=form, current_user=current_user)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
+
+
+@app.route("/dashboard", methods=["POST", "GET"])
+@authenticated_user_only
+def get_all_tasks():
+    """This route handle both the posting all the task in database.
+    And adding a new task."""
+    form = TaskForm()
+    if form.validate_on_submit():
+        new_task = Tasks(title=form.task.data,
+                         author_id=current_user.id)
+        db.session.add(new_task)
+        db.session.commit()
+        return redirect(url_for("get_all_tasks"))
+
+    result = db.session.execute(db.select(Tasks))
+    tasks = result.scalars().all()
+    return render_template("to-do-list.html", current_user=current_user, all_task=tasks, form=form)
 
 
 if __name__ == "__main__":

@@ -140,7 +140,7 @@
   margin-bottom: 20px;
 }
 
-.todo-input input {
+.todo-input .task-field {
   flex: 1;
   padding: 10px;
   border: 1px solid #bdbdbd;

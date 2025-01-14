@@ -1,4 +1,5 @@
 <!doctype html>
+{% from "bootstrap5/form.html" import render_field %}
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -34,7 +35,7 @@
               <li><a class="dropdown-item" href="#">My Profile</a></li>
               <li><a class="dropdown-item" href="#">Settings</a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger logout" href="#">Logout</a></li>
+              <li><a class="dropdown-item text-danger logout" href="{{ url_for('logout') }}">Logout</a></li>
             </ul>
           </div>
         </div>
@@ -60,10 +61,12 @@
         <img src="/static/assets/img/settings.svg" alt="originals-icon">
         <div>Settings</div>
       </div>
-      <div class="sidebar-link logout-sidebar">
-        <img src="/static/assets/img/logout.svg" alt="youtube-music-icon">
-        <div>Logout</div>
-      </div>
+      <a style="text-decoration: none;" href="{{ url_for('logout') }}">
+        <div class="sidebar-link logout-sidebar">
+          <img src="/static/assets/img/logout.svg" alt="youtube-music-icon">
+          <div>Logout</div>
+        </div>
+      </a>
     </nav>
     <!-- SIDEBAR -->
 
@@ -75,26 +78,24 @@
             <p>Organize your day effectively</p>
           </div>
 
-          <div class="todo-input">
-            <input type="text" placeholder="Add a new task..." />
-            <button class="btn-add">Add Task</button>
-          </div>
+          <form action="{{ url_for('get_all_tasks') }}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="todo-input">
+              {{ render_field(form.task, class="task-field", placeholder="Add a new task...") }}
+              {{ render_field(form.submit, class="btn-add") }}
+            </div>
+          </form>
 
           <div class="todo-list">
+            {% for task in all_task %}
             <div class="todo-item">
-              <span>Buy groceries</span>
+              <span>{{ task.title }}</span>
               <div class="todo-actions">
                 <button class="btn-complete">Complete</button>
                 <button class="btn-delete">Delete</button>
               </div>
             </div>
-            <div class="todo-item">
-              <span>Renew car insurance</span>
-              <div class="todo-actions">
-                <button class="btn-complete">Complete</button>
-                <button class="btn-delete">Delete</button>
-              </div>
-            </div>
+            {% endfor %}
             <!-- Add more tasks -->
           </div>
         </div>

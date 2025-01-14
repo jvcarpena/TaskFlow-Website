@@ -14,3 +14,8 @@ class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Login")
+
+
+class TaskForm(FlaskForm):
+    task = StringField("", validators=[DataRequired()])
+    submit = SubmitField("Add Task")
