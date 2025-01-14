@@ -88,13 +88,15 @@
 
           <div class="todo-list">
             {% for task in all_task %}
-            <div class="todo-item">
-              <span>{{ task.title }}</span>
-              <div class="todo-actions">
-                <button class="btn-complete">Complete</button>
-                <button class="btn-delete">Delete</button>
-              </div>
-            </div>
+              {% if current_user.id == task.author_id %}
+                <div class="todo-item">
+                  <span>{{ task.title }}</span>
+                  <div class="todo-actions">
+                    <button class="btn-complete">Complete</button>
+                    <button class="btn-delete">Delete</button>
+                  </div>
+                </div>
+              {% endif %}
             {% endfor %}
             <!-- Add more tasks -->
           </div>

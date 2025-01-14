@@ -167,7 +167,7 @@ def logout():
 @app.route("/dashboard", methods=["POST", "GET"])
 @authenticated_user_only
 def get_all_tasks():
-    """This route handle both the posting all the task in database.
+    """This route handle both the posting all the task from the database.
     And adding a new task."""
     form = TaskForm()
     if form.validate_on_submit():
