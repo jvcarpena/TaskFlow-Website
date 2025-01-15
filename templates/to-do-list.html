@@ -24,7 +24,7 @@
             <!-- Profile Picture -->
             <img
               class="profile-pic dropdown-toggle"
-              src="/static/assets/img/image.png"
+              src="{{ current_user.email | gravatar }}"
               alt="profile-pic"
               id="profileDropdown"
               data-bs-toggle="dropdown"
@@ -32,7 +32,7 @@
 
             <!-- Dropdown Menu -->
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="#">My Profile</a></li>
+              <li><a class="dropdown-item" href="#">{{ current_user.name.title() }}</a></li>
               <li><a class="dropdown-item" href="#">Settings</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item text-danger logout" href="{{ url_for('logout') }}">Logout</a></li>
@@ -93,7 +93,7 @@
                   <span>{{ task.title }}</span>
                   <div class="todo-actions">
                     <button class="btn-complete">Complete</button>
-                    <button class="btn-delete">Delete</button>
+                    <a href="{{ url_for('delete_task', task_id=task.id) }}"><button class="btn-delete">Delete</button></a>
                   </div>
                 </div>
               {% endif %}

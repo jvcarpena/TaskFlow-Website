@@ -182,5 +182,14 @@ def get_all_tasks():
     return render_template("to-do-list.html", current_user=current_user, all_task=tasks, form=form)
 
 
+@app.route("/delete/<int:task_id>")
+@authenticated_user_only
+def delete_task(task_id):
+    task_to_delete = db.get_or_404(Tasks, task_id)
+    db.session.delete(task_to_delete)
+    db.session.commit()
+    return redirect(url_for("get_all_tasks"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
