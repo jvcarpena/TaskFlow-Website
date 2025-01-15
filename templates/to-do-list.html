@@ -87,19 +87,52 @@
           </form>
 
           <div class="todo-list">
-            {% for task in all_task %}
+            {% for task in all_task|sort(attribute='is_completed')|sort(attribute='is_in_progress', reverse=True) %}
               {% if current_user.id == task.author_id %}
-                <div class="todo-item">
-                  <span>{{ task.title }}</span>
+                <div class="todo-item {% if task.is_completed %}task-completed{% elif task.is_in_progress %}task-in-progress{% endif %}">
+                  <span class="{% if task.is_completed %}text-decoration-line-through text-muted{% elif task.is_in_progress %}text-warning{% endif %}">
+                    {{ task.title }}
+                  </span>
                   <div class="todo-actions">
-                    <button class="btn-complete">Complete</button>
-                    <a href="{{ url_for('delete_task', task_id=task.id) }}"><button class="btn-delete">Delete</button></a>
+                    <div class="btn-group">
+                      <!-- Update Button -->
+                      <button type="button" class="btn {% if task.is_in_progress %}btn-warning{% elif task.is_completed %}btn-success{% else %}btn-primary{% endif %} dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        {% if task.is_in_progress %}
+                          In Progress
+                        {% elif task.is_completed %}
+                          Completed
+                        {% else %}
+                          Update
+                        {% endif %}
+                      </button>
+                      <!-- Dropdown Menu -->
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a href="{{ url_for('mark_as_in_progress', task_id=task.id) }}" style="display: inline;">
+                            <button type="submit" class="dropdown-item">In Progress</button>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="{{ url_for('mark_as_completed', task_id=task.id) }}" style="display: inline;">
+                            <button type="submit" class="dropdown-item">Completed</button>
+                          </a>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="#">Edit</a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- Delete Button -->
+                    <a href="{{ url_for('delete_task', task_id=task.id) }}">
+                      <button class="btn btn-danger">Delete</button>
+                    </a>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-            <!-- Add more tasks -->
           </div>
+
         </div>
 
 

@@ -208,12 +208,12 @@
   cursor: pointer;
 }
 
-.btn-complete {
+.btn-update {
   background-color: #4caf50;
   color: #fff;
 }
 
-.btn-complete:hover {
+.btn-update:hover {
   background-color: #66bb6a;
 }
 
@@ -224,5 +224,32 @@
 
 .btn-delete:hover {
   background-color: #ef5350;
+}
+
+/* Strikethrough for completed tasks */
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+/* Muted color for completed tasks */
+.text-muted {
+  color: gray !important;
+}
+
+/* Warning color for in-progress tasks */
+.text-warning {
+  color: orange !important;
+}
+
+/* Styling for in-progress tasks */
+.task-in-progress {
+  background-color: #fff3cd; /* Light yellow background */
+  border-left: 5px solid orange;
+}
+
+/* Styling for completed tasks */
+.task-completed {
+  background-color: #f8f9fa; /* Light gray background */
+  opacity: 0.8;
 }
 
