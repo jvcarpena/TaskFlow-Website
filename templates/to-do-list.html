@@ -87,7 +87,6 @@
           </form>
 
           <div class="todo-list">
-            <!-- {% if current_user.id == task.author_id %} -->
             {% set user_tasks = all_task|selectattr('author_id', 'equalto', current_user.id)|list %}
             <!-- Check if the current user has no tasks -->
             {% if user_tasks|length == 0 %}
