@@ -136,28 +136,46 @@
 /* Input Section */
 .todo-input {
   display: flex;
+  align-items: center;
   gap: 10px;
   margin-bottom: 20px;
 }
 
+/* Task Input Field */
 .todo-input .task-field {
-  flex: 1;
-  padding: 10px;
+  flex: 1 !important;
+  padding: 12px;
+  font-size: 16px;
   border: 1px solid #bdbdbd;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+.todo-input .task-field:focus {
+  border-color: #512da8;
+  box-shadow: 0 4px 8px rgba(81, 45, 168, 0.2);
+  outline: none;
+}
+
+/* Submit Button */
 .todo-input .btn-add {
-  padding: 10px 15px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
   background-color: #512da8;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-top: 7px;
 }
 
 .todo-input .btn-add:hover {
   background-color: #673ab7;
+  transform: scale(1.05);
 }
 
 /* Task List */
@@ -169,6 +187,7 @@
 
 .todo-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 15px;
   background-color: #ffffff;
