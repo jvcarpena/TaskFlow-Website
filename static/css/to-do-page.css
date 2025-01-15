@@ -208,24 +208,6 @@
   cursor: pointer;
 }
 
-.btn-update {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-.btn-update:hover {
-  background-color: #66bb6a;
-}
-
-.btn-delete {
-  background-color: #f44336;
-  color: #fff;
-}
-
-.btn-delete:hover {
-  background-color: #ef5350;
-}
-
 /* Strikethrough for completed tasks */
 .text-decoration-line-through {
   text-decoration: line-through;
@@ -253,3 +235,24 @@
   opacity: 0.8;
 }
 
+/* Make sure dropdown is positioned correctly */
+.dropdown-toggle {
+  position: relative; /* Ensures dropdown is within the same stacking context */
+  z-index: 1051; /* High value for dropdown button */
+}
+
+/* Ensure dropdown menu is positioned absolutely */
+.dropdown-menu {
+  position: absolute; /* Ensure the dropdown menu is positioned relative to its parent */
+  z-index: 1052; /* Slightly lower than the button */
+}
+
+/* Ensure that dropdown is always visible above the content */
+.dropdown-menu.show {
+  display: block !important; /* Force visibility when toggled */
+}
+
+.dropdown-item {
+  margin-left: 0 !important;
+  padding-left: 20px !important;
+}
