@@ -9,7 +9,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import RegisterForm, LoginForm, TaskForm
+from forms import RegisterForm, LoginForm, TaskForm, EditForm
 from flask_wtf.csrf import CSRFProtect
 
 # Load .env file containing sensitive information such as the Flask secret key and database URI
@@ -195,9 +195,13 @@ def logout():
 @authenticated_user_only
 def get_all_tasks():
     """
-    Route for the user's task dashboard. Handles displaying tasks and adding new tasks.
+    Route for the user's task dashboard. Handles displaying tasks, adding new tasks and editing
+    current task.
     """
     form = TaskForm()
+    form_edit = None  # Initialize edit form (it will be populated when editing)
+
+    # Handle adding new tasks
     if form.validate_on_submit():
         new_task = Tasks(title=form.task.data,
                          author_id=current_user.id)
@@ -205,9 +209,20 @@ def get_all_tasks():
         db.session.commit()
         return redirect(url_for("get_all_tasks"))
 
+    # Handle task editing
+    task_to_edit = None
+    if request.args.get('task_id'):
+        task_to_edit = db.get_or_404(Tasks, request.args['task_id'])
+        form_edit = EditForm(title_to_edit=task_to_edit.title)  # Pre-populate form with task details
+
+        if form_edit.validate_on_submit():
+            task_to_edit.title = form_edit.title_to_edit.data
+            db.session.commit()
+            return redirect(url_for("get_all_tasks"))
+
     result = db.session.execute(db.select(Tasks).order_by(Tasks.is_in_progress.desc(), Tasks.is_completed.asc()))
     tasks = result.scalars().all()
-    return render_template("to-do-list.html", current_user=current_user, all_task=tasks, form=form)
+    return render_template("to-do-list.html", current_user=current_user, all_task=tasks, form=form, form_edit=form_edit, task_to_edit=task_to_edit)
 
 
 @app.route("/delete/<int:task_id>")

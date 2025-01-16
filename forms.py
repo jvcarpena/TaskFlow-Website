@@ -19,3 +19,8 @@ class LoginForm(FlaskForm):
 class TaskForm(FlaskForm):
     task = StringField("", validators=[DataRequired()])
     submit = SubmitField("Add Task")
+
+
+class EditForm(FlaskForm):
+    title_to_edit = StringField("", validators=[DataRequired()])
+    submit = SubmitField("Save Changes")
