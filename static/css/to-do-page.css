@@ -126,6 +126,12 @@
   }
 }
 
+.todo-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
 /* Header */
 .todo-header h2 {
@@ -142,6 +148,7 @@
 .todo-input {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
