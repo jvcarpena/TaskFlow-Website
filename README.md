@@ -1,4 +1,4 @@
-# Flask Task Management App
+# TaskFlow Web App
 
 ## Overview
 This is a simple **Flask-based Task Management App** that allows users to **register, log in, and manage their tasks**. The app includes user authentication, task management functionalities, and a Bootstrap-styled interface for a smooth user experience.
